@@ -47,9 +47,18 @@ public class ResourceBuilder
         }
     }
 
-    [MenuItem("Build/AssetBundles/Android_Adressable")]
-    public static void Build_Android_Adressable()
+    [MenuItem("Build/AssetBundles/Android_Addressable")]
+    public static void Build_Android_Addressable()
     {
-        UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.BuildPlayerContent();
+        // 新規ビルド
+        // あらたなcontents_catalogが生成される
+        //UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.BuildPlayerContent();
+
+        // 更新ビルド
+        var path = UnityEditor.AddressableAssets.Build.ContentUpdateScript.GetContentStateDataPath(true);
+        if (!string.IsNullOrEmpty(path))
+        {
+            UnityEditor.AddressableAssets.Build.ContentUpdateScript.BuildContentUpdate(AddressableAssetSettingsDefaultObject.Settings, path);
+        }
     }
 }

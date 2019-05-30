@@ -22,6 +22,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 9732af5b66a081d48ac41d5f55907d8b, type: 2}
   - {fileID: 11400000, guid: d2f4420684df1364fb8ab886bec06580, type: 2}
+  - {fileID: 11400000, guid: d5644446084bc2d48a7741774a383410, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -38,7 +39,7 @@ MonoBehaviour:
       - m_Id: 07bbb46ccb0d48e49abeeb4458b4383c
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: e30e5c9d7d67ffd49b91a5e73279bfba
-        m_Value: http://172.22.109.122:58819/
+        m_Value: Assets/Output
       - m_Id: f6ad88d64bfafbe49b5a79ad64f22da3
         m_Value: Assets/ServerData/[BuildTarget]
       - m_Id: 3586567ed2e331e49929c9ac9ab75622
@@ -90,7 +91,7 @@ MonoBehaviour:
           m_Key: HostingServicePort
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
-          m_Data: Assets/ServerData/Android
+          m_Data: Assets/ServerData/StandaloneWindows64
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean
