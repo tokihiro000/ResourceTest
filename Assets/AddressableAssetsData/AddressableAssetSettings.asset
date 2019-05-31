@@ -17,7 +17,7 @@ MonoBehaviour:
   m_RemoteCatalogBuildPath:
     m_Id: f6ad88d64bfafbe49b5a79ad64f22da3
   m_RemoteCatalogLoadPath:
-    m_Id: 3586567ed2e331e49929c9ac9ab75622
+    m_Id: <undefined>
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: 9732af5b66a081d48ac41d5f55907d8b, type: 2}
@@ -33,6 +33,20 @@ MonoBehaviour:
     - m_InheritedParent: 
       m_Id: cf87a33b1800f2e419a804e00d66337f
       m_ProfileName: Default
+      m_Values:
+      - m_Id: 07c781b7400123a4eab1c6fd0d41e8d7
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 07bbb46ccb0d48e49abeeb4458b4383c
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: e30e5c9d7d67ffd49b91a5e73279bfba
+        m_Value: Assets/Output
+      - m_Id: f6ad88d64bfafbe49b5a79ad64f22da3
+        m_Value: Assets/ServerData/[BuildTarget]
+      - m_Id: 3586567ed2e331e49929c9ac9ab75622
+        m_Value: http://172.22.109.122:58819
+    - m_InheritedParent: 
+      m_Id: 6b90526c47ded48469a8810fb23fa89c
+      m_ProfileName: RemotePackage
       m_Values:
       - m_Id: 07c781b7400123a4eab1c6fd0d41e8d7
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
@@ -64,6 +78,8 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - Test1
+    - Test2
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: cf6601f152141094abab8a92a5e572fd, type: 2}
@@ -87,7 +103,7 @@ MonoBehaviour:
         m_SerializedData:
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Int32
-          m_Data: 58819
+          m_Data: 59566
           m_Key: HostingServicePort
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String

@@ -17,6 +17,10 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 8add2e476966d9648b843dec0f60cf26
   m_SerializeEntries:
+  - m_GUID: 5c92846cf35f92c49a6f12f12d137f84
+    m_Address: Assets/AssetBundleResources/Materials/Dark.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   - m_GUID: d98be7517274b1c4a9fb4a890283ab87
     m_Address: Assets/AssetBundleResources/Materials/White.mat
     m_ReadOnly: 0
