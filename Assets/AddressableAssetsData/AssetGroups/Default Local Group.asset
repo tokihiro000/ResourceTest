@@ -17,10 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 3b32d7526da46e24da2c0623931cf84b
   m_SerializeEntries:
-  - m_GUID: 61998e791a042f948af9a2fe052f9026
-    m_Address: Assets/AssetBundleResources/Prefabs/Cube.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 6588024f359d67441b8ec2efc0ba2fff
     m_Address: Assets/AssetBundleResources/Textures/cat1.png
     m_ReadOnly: 0
