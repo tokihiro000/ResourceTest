@@ -27,15 +27,13 @@ public class ResourceSample : MonoBehaviour
         //Caching.IsVersionCached
         cube1?.OnClickAsObservable().Subscribe(x =>
         {
-            //StartCoroutine("LoadEnumerator", "Assets/AssetBundleResources/Prefabs/Cube.prefab");
             List<string> locations = new List<string>();
-            locations.Add("Assets/AssetBundleResources/Prefabs/Cube2.prefab");
-            StartCoroutine("LoadSizeEnumerator", locations);
+            StartCoroutine("LoadEnumerator", "Assets/AssetBundleResources/Prefabs/Cube.prefab");
         });
 
         cube2?.OnClickAsObservable().Subscribe(x =>
         {
-            StartCoroutine("LoadEnumerator", "Assets/AssetBundleResources/Prefabs/Cube2.prefab");
+            StartCoroutine("CheckResourceUpdate");
         });
     }
 
@@ -46,7 +44,79 @@ public class ResourceSample : MonoBehaviour
         //Instantiate(loadAssetAsync.Result);
     }
 
-    private IEnumerator LoadSizeEnumerator(IList<string> locations)
+    private IEnumerator CheckResourceUpdate()
+    {
+
+        // #loadcontentcatalog
+        //var h = Addressables.LoadContentCatalogAsync($"{System.IO.Path.Combine(Addressables.RuntimePath, "catalog.json")}");
+        //yield return h;
+        //Addressables.Release(h);
+        //var hh = Addressables.LoadContentCatalogAsync($"{System.IO.Path.Combine(Addressables.RuntimePath, "catalog.json")}");
+        //yield return hh;
+        //yield break;
+        // #loadcontentcatalog
+
+        // #InitializeAsync
+        var initHandle = Addressables.InitializeAsync();
+        yield return initHandle;
+        Addressables.Release(initHandle);
+        Addressables.ResourceLocators.Clear();
+
+        var initHandle2 = Addressables.InitializeAsync();
+        yield return initHandle2;
+        //Addressables.Release(initHandle2);
+        yield break;
+    }
+    private IEnumerator LoadTest()
+    { 
+        var playerSettingsLocation = Addressables.ResolveInternalId(PlayerPrefs.GetString(Addressables.kAddressablesRuntimeDataPath, Addressables.RuntimePath + "/settings.json"));
+        IResourceLocation[] dependencies = new IResourceLocation[(int)ContentCatalogProvider.DependencyHashIndex.Count];
+        var runtimeDataLocation = new ResourceLocationBase("RuntimeData", playerSettingsLocation, typeof(JsonAssetProvider).FullName);
+        var resourceManager = Addressables.ResourceManager;
+        var catalogHandle = resourceManager.ProvideResource<ResourceManagerRuntimeData>(runtimeDataLocation);
+        yield return catalogHandle;
+        var rtd = catalogHandle.Result;
+        Addressables.Release(catalogHandle);
+
+        if (rtd != null)
+        {
+            var locMap = new ResourceLocationMap(rtd.CatalogLocations);
+            IList<IResourceLocation> remoteCatalogList;
+            if (!locMap.Locate("AddressablesMainContentCatalogRemoteHash", out remoteCatalogList))
+            {
+                Debug.LogError($"not found: {ResourceManagerRuntimeData.kCatalogAddress}");
+            }
+            else
+            {
+                Debug.Log($"catalogs.Count: {remoteCatalogList.Count}");
+                var catalog = remoteCatalogList[0];
+                Debug.Log($"internalId: {catalog.InternalId}");
+                Debug.Log($"provideId: {catalog.ProviderId.ToString()}");
+                dependencies[(int)ContentCatalogProvider.DependencyHashIndex.Remote] = new ResourceLocationBase("AddressablesMainContentCatalogRemoteHash", catalog.InternalId, typeof(TextDataProvider).FullName);
+            }
+
+            IList<IResourceLocation> localCatalogList;
+            if (!locMap.Locate(ResourceManagerRuntimeData.kCatalogAddress, out localCatalogList))
+            {
+                Debug.LogError($"not found: {ResourceManagerRuntimeData.kCatalogAddress}");
+            }
+            else
+            {
+                Debug.Log($"catalogs.Count: {localCatalogList.Count}");
+                var catalog = localCatalogList[0];
+                Debug.Log($"internalId: {catalog.InternalId}");
+                Debug.Log($"provideId: {catalog.ProviderId.ToString()}");
+                dependencies[(int)ContentCatalogProvider.DependencyHashIndex.Cache] = new ResourceLocationBase("AddressablesMainContentCatalogCacheHash", catalog.InternalId, typeof(TextDataProvider).FullName);
+            }
+            var location = new ResourceLocationBase("AddressablesMainContentCatalog", "Library/com.unity.addressables/StreamingAssetsCopy/aa/Windows/catalog.json", typeof(ContentCatalogProvider).FullName, dependencies);
+            var tmp = Addressables.ResourceManager.ProvideResource<ContentCatalogData>(location);
+            yield return tmp;
+            Debug.Log($"tmp: {tmp.Result}");
+            Addressables.Release(tmp);
+        }
+    }
+
+    private IEnumerator LoadSizeEnumerator(string locations)
     {
         // サイズ取得
         var downloadSizeHandle = Addressables.GetDownloadSizeAsync(locations);
@@ -73,7 +143,6 @@ public class ResourceSample : MonoBehaviour
         //initOp.m_rtdOp = aa.ResourceManager.ProvideResource<ResourceManagerRuntimeData>(runtimeDataLocation);
 
         //Debug.Log($"catalogPath: {UnityEngine.AddressableAssets.Initialization.ResourceManagerRuntimeData.kCatalogAddress}");
-        //Addressables.LoadContentCatalogAsync
         //var contentCatalogPath = Addressables.ResolveInternalId(PlayerPrefs.GetString(Addressables.kAddressablesRuntimeDataPath, Addressables.RuntimePath + "/catalog.json"));
         //Debug.Log($"contentCatalogPath: {contentCatalogPath}");
         //var catalogHandle = Addressables.LoadContentCatalogAsync($"{System.IO.Path.Combine(Addressables.RuntimePath, "catalog.json")}");
@@ -88,11 +157,12 @@ public class ResourceSample : MonoBehaviour
         //Debug.Log($"Addressables.kAddressablesRuntimeDataPath: {Addressables.kAddressablesRuntimeDataPath}");
 
         // サイズ取得
+        var downloadSize = 0L;
         var downloadSizeHandle = Addressables.GetDownloadSizeAsync(assetsPath);
         yield return downloadSizeHandle;
         if (downloadSizeHandle.Status == AsyncOperationStatus.Succeeded)
         {
-            var downloadSize = downloadSizeHandle.Result;
+            downloadSize = downloadSizeHandle.Result;
             Debug.Log($"[AsyncOperationStatus: Succeeded] donwloadSize: {downloadSize}");
         }
         else
@@ -105,23 +175,26 @@ public class ResourceSample : MonoBehaviour
         //var load = Addressables.DownloadDependenciesAsync("Assets/AssetBundleResources/Prefabs/Cube.prefab");
         //Debug.Log($"load: {load.ToString()}");
         //await load.Task;
-        var handle = Addressables.DownloadDependenciesAsync(assetsPath);
-        yield return handle;
-        if (handle.Status == AsyncOperationStatus.Succeeded)
+        if (downloadSize > 0.0f)
         {
-            Debug.Log($"[AsyncOperationStatus: Succeeded]");
-            foreach (var resource in handle.Result as System.Collections.Generic.List<UnityEngine.ResourceManagement.ResourceProviders.IAssetBundleResource>)
+            var handle = Addressables.DownloadDependenciesAsync(assetsPath);
+            yield return handle;
+            if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                // AssetBundleファイル
-                AssetBundle ab = resource.GetAssetBundle();
-                Debug.Log($"[AsyncOperationStatus: Succeeded] {resource.GetAssetBundle()}");
+                Debug.Log($"[AsyncOperationStatus: Succeeded]");
+                foreach (var resource in handle.Result as System.Collections.Generic.List<UnityEngine.ResourceManagement.ResourceProviders.IAssetBundleResource>)
+                {
+                    // AssetBundleファイル
+                    AssetBundle ab = resource.GetAssetBundle();
+                    Debug.Log($"[AsyncOperationStatus: Succeeded] {resource.GetAssetBundle()}");
+                }
             }
+            else
+            {
+                Debug.Log($"[AsyncOperationStatus: {handle.Status.ToString()}]");
+            }
+            Addressables.Release(handle);
         }
-        else
-        {
-            Debug.Log($"[AsyncOperationStatus: {handle.Status.ToString()}]");
-        }
-        Addressables.Release(handle);
 
         // load
         var path = assetsPath;
@@ -132,60 +205,6 @@ public class ResourceSample : MonoBehaviour
         // Instantiate
         Instantiate(gameObjDict[path]);
 
-        IResourceLocation[] dependencies = new IResourceLocation[(int)ContentCatalogProvider.DependencyHashIndex.Count];
-
-        //var location = new ResourceLocationBase(k_LocationName, k_LocationId, typeof(ContentCatalogProvider).FullName, dependencies);
-        var playerSettingsLocation = Addressables.ResolveInternalId(PlayerPrefs.GetString(Addressables.kAddressablesRuntimeDataPath, Addressables.RuntimePath + "/settings.json"));
-        var runtimeDataLocation = new ResourceLocationBase("RuntimeData", playerSettingsLocation, typeof(JsonAssetProvider).FullName);
-        var resourceManager = Addressables.ResourceManager;
-        var catalogHandle = resourceManager.ProvideResource<ResourceManagerRuntimeData>(runtimeDataLocation);
-        yield return catalogHandle;
-        var rtd = catalogHandle.Result;
-        if (rtd != null)
-        {
-            foreach (var loc in rtd.CatalogLocations)
-            {
-                //Debug.Log($"location: {loc}");
-            }
-
-            var locMap = new ResourceLocationMap(rtd.CatalogLocations);
-            IList<IResourceLocation> localCatalogList;
-            if (!locMap.Locate(ResourceManagerRuntimeData.kCatalogAddress, out localCatalogList))
-            {
-                Debug.LogError($"not found: {ResourceManagerRuntimeData.kCatalogAddress}");
-            }
-            else
-            {
-                Debug.Log($"catalogs.Count: {localCatalogList.Count}");
-                var catalog = localCatalogList[0];
-                Debug.Log($"internalId: {catalog.InternalId}");
-                Debug.Log($"provideId: {catalog.ProviderId.ToString()}");
-                dependencies[(int)ContentCatalogProvider.DependencyHashIndex.Cache] = new ResourceLocationBase("AddressablesMainContentCatalogCacheHash", catalog.InternalId, typeof(TextDataProvider).FullName);
-                //Addressables.LoadContentCatalogAsync(catalog.InternalId);
-                //LoadContentCatalogInternal(catalogs, 0, locMap);
-            }
-
-            IList<IResourceLocation> remoteCatalogList;
-            if (!locMap.Locate("AddressablesMainContentCatalogRemoteHash", out remoteCatalogList))
-            {
-                Debug.LogError($"not found: {ResourceManagerRuntimeData.kCatalogAddress}");
-            }
-            else
-            {
-                Debug.Log($"catalogs.Count: {remoteCatalogList.Count}");
-                var catalog = remoteCatalogList[0];
-                Debug.Log($"internalId: {catalog.InternalId}");
-                Debug.Log($"provideId: {catalog.ProviderId.ToString()}");
-                dependencies[(int)ContentCatalogProvider.DependencyHashIndex.Remote] = new ResourceLocationBase("AddressablesMainContentCatalogRemoteHash", catalog.InternalId, typeof(TextDataProvider).FullName);
-
-                //Addressables.LoadContentCatalogAsync(catalog.InternalId);
-                //LoadContentCatalogInternal(catalogs, 0, locMap);
-            }
-            var location = new ResourceLocationBase("AddressablesMainContentCatalog", "Library/com.unity.addressables/StreamingAssetsCopy/aa/Windows/catalog.json", typeof(ContentCatalogProvider).FullName, dependencies);
-            var tmp = Addressables.ResourceManager.ProvideResource<ContentCatalogData>(location);
-            yield return tmp;
-            Debug.Log($"tmp: {tmp.Result}");
-        }
 
         //Debug.Log($"end reload catalog: {catalogHandle.Result}");
         //foreach(var provider in Addressables.ResourceManager.ResourceProviders)
