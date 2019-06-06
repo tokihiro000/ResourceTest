@@ -10,25 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: 4k_Texture
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: 4k_Texture
   m_Data:
     m_SerializedData: []
-  m_GUID: 3b32d7526da46e24da2c0623931cf84b
+  m_GUID: 35de4e4cc45dde94cb6cf80097ec34f6
   m_SerializeEntries:
-  - m_GUID: 6588024f359d67441b8ec2efc0ba2fff
-    m_Address: Assets/AssetBundleResources/Textures/cat1.png
+  - m_GUID: 0f56aa76a58f43d49854b5026b215464
+    m_Address: 4k_2.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
     - default
-  - m_GUID: 89b14f7e21604fe4da313ce555217b54
-    m_Address: Assets/AssetBundleResources/Prefabs/Cube2.prefab
+  - m_GUID: 3ab646f134d0e094cb77694878f47011
+    m_Address: 4k_4.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
     - default
-  - m_GUID: d7d6ab1f3ef835f44ac74ee3a2282b60
-    m_Address: cat2.png
+  - m_GUID: 9962645db98de0047920fce044fe9d9e
+    m_Address: 4k_1.jpg
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+  - m_GUID: 9cb4d7936d5e2d9429fe02bc055c49ac
+    m_Address: 4k_3.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
     - default
@@ -36,5 +41,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 62f0b634a9091f3489c29190c2f1052f, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 8b80b3a0ddcc7f64590bdfa760f994ea, type: 2}
-    - {fileID: 11400000, guid: 2280d408de9eea54b9b1e737e08ae04e, type: 2}
+    - {fileID: 11400000, guid: e1ff7bbe1c9bf1a43b00dd024a720fef, type: 2}
+    - {fileID: 11400000, guid: 98f4f13d6f8fca346a5b7487b9765ee5, type: 2}

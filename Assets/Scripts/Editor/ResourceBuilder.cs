@@ -53,12 +53,26 @@ public class ResourceBuilder
         // 新規ビルド
         // あらたなcontents_catalogが生成される
         //UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.BuildPlayerContent();
-        
+
         // 更新ビルド
         var path = UnityEditor.AddressableAssets.Build.ContentUpdateScript.GetContentStateDataPath(true);
         if (!string.IsNullOrEmpty(path))
         {
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
             UnityEditor.AddressableAssets.Build.ContentUpdateScript.BuildContentUpdate(AddressableAssetSettingsDefaultObject.Settings, path);
+            foreach (var profileName in settings.profileSettings.GetAllProfileNames())
+            {
+                Debug.Log($"profileName: {profileName}");
+            }
+            Debug.Log($"settings.activeProfileId: {settings.activeProfileId}");
+            //Debug.Log($"settings.activeProfileId: {settings.activeProfileId}");
         }
+    }
+
+
+    [MenuItem("Build/AssetBundles/Addressable_Settings_Test")]
+    public static void Addressable_Settings_Test()
+    {
+        var settings = AddressableAssetSettingsDefaultObject.Settings;
     }
 }

@@ -20,11 +20,13 @@ MonoBehaviour:
   - m_GUID: 5c92846cf35f92c49a6f12f12d137f84
     m_Address: Assets/AssetBundleResources/Materials/Dark.mat
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
   - m_GUID: d98be7517274b1c4a9fb4a890283ab87
     m_Address: Assets/AssetBundleResources/Materials/White.mat
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 62f0b634a9091f3489c29190c2f1052f, type: 2}
   m_SchemaSet:

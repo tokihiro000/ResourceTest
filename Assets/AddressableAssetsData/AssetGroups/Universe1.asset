@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Cube1
+  m_Name: Universe1
   m_EditorClassIdentifier: 
-  m_GroupName: Cube1
+  m_GroupName: Universe1
   m_Data:
     m_SerializedData: []
-  m_GUID: 0218dee6eb8c38d4eb5063efbb2370df
+  m_GUID: af560be383f6c8344be49104f581acb3
   m_SerializeEntries:
-  - m_GUID: 61998e791a042f948af9a2fe052f9026
-    m_Address: Assets/AssetBundleResources/Prefabs/Cube.prefab
+  - m_GUID: 6baaf533c0be33747926a6f3d358352d
+    m_Address: sankan.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
     - default
@@ -26,5 +26,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 62f0b634a9091f3489c29190c2f1052f, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 7badba578f22dc341a00fd6649e453c0, type: 2}
-    - {fileID: 11400000, guid: b83be6e75d72f704ea7edee825fb8523, type: 2}
+    - {fileID: 11400000, guid: f6136ece94c240643a6d0f9c735b36ef, type: 2}
+    - {fileID: 11400000, guid: 922b30e3453b402479cc28092f431544, type: 2}

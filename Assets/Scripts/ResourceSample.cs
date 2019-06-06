@@ -14,8 +14,9 @@ using UnityEngine.AddressableAssets.Initialization;
 
 public class ResourceSample : MonoBehaviour
 {
-    public Button cube1, cube2;
+    public Button cube1, cube2, donwload;
     private Dictionary<string, GameObject> gameObjDict = new Dictionary<string, GameObject>();
+    private bool isClicked = false;
 
     // Start is called before the first frame update
     void Start()
@@ -28,25 +29,65 @@ public class ResourceSample : MonoBehaviour
         cube1?.OnClickAsObservable().Subscribe(x =>
         {
             List<string> locations = new List<string>();
-            StartCoroutine("LoadEnumerator", "Assets/AssetBundleResources/Prefabs/Cube.prefab");
+            StartCoroutine("LoadModel", "Assets/AssetBundleResources/Prefabs/Cube.prefab");
         });
 
         cube2?.OnClickAsObservable().Subscribe(x =>
         {
-            StartCoroutine("CheckResourceUpdate");
+            StartCoroutine("CheckResourceUpdate", "Assets/AssetBundleResources/Prefabs/Cube.prefab");
+        });
+
+        donwload?.OnClickAsObservable().Subscribe(x =>
+        {
+            StartCoroutine("DonwloadLoadResource", "default");
         });
     }
 
-    private async void LoadResource()
+
+    private IEnumerator LoadModel()
     {
-        //var loadAssetAsync = Addressables.LoadAssetAsync<GameObject>("Assets/AssetBundleResources/Prefabs/Cube.prefab");
-        //await loadAssetAsync.Task;
-        //Instantiate(loadAssetAsync.Result);
+        var handle = Addressables.LoadAssetAsync<GameObject>("Assets/AssetBundleResources/AllInOne/unitychan.prefab");
+        yield return handle;
+        Instantiate(handle.Result);
     }
 
-    private IEnumerator CheckResourceUpdate()
+    private IEnumerator DonwloadLoadResource(string assetsPath)
     {
+        yield return Addressables.InitializeAsync();
 
+        var handle = Addressables.DownloadDependenciesAsync(assetsPath);
+        var a = handle.PercentComplete;
+        yield return handle;
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            Debug.Log($"[AsyncOperationStatus: Succeeded]");
+            foreach (var resource in handle.Result as System.Collections.Generic.List<UnityEngine.ResourceManagement.ResourceProviders.IAssetBundleResource>)
+            {
+                // AssetBundleファイル
+                //AssetBundle ab = resource.GetAssetBundle();
+                //hoge1 = ab.LoadAsset("4k_1.jpg");
+                //hoge2 = ab.LoadAsset("4k_2.jpg");
+                //hoge3 = ab.LoadAsset("4k_3.jpg");
+                //hoge4 = ab.LoadAsset("4k_4.jpg");
+                Debug.Log($"[AsyncOperationStatus: Succeeded] {resource.GetAssetBundle()}");
+                //ab.Unload(true);
+            }
+        }
+        else
+        {
+            Debug.Log($"[AsyncOperationStatus: {handle.Status.ToString()}]");
+        }
+        //UnityEngine.Networking.DownloadHandlerFile;
+        Addressables.Release(handle);
+    }
+
+    private IEnumerator CheckResourceUpdate(string assetsPath)
+    {
+        if (isClicked)
+        {
+            yield break;
+        }
+        isClicked = true;
         // #loadcontentcatalog
         //var h = Addressables.LoadContentCatalogAsync($"{System.IO.Path.Combine(Addressables.RuntimePath, "catalog.json")}");
         //yield return h;
@@ -55,7 +96,6 @@ public class ResourceSample : MonoBehaviour
         //yield return hh;
         //yield break;
         // #loadcontentcatalog
-
         // #InitializeAsync
         var initHandle = Addressables.InitializeAsync();
         yield return initHandle;
@@ -64,9 +104,53 @@ public class ResourceSample : MonoBehaviour
 
         var initHandle2 = Addressables.InitializeAsync();
         yield return initHandle2;
+
+        while (!Caching.ready)
+        {
+            yield return new WaitForSeconds(1.0f);
+        }
+
         //Addressables.Release(initHandle2);
-        yield break;
+        var downloadSize = 0L;
+        var downloadSizeHandle = Addressables.GetDownloadSizeAsync(assetsPath);
+        yield return downloadSizeHandle;
+        if (downloadSizeHandle.Status == AsyncOperationStatus.Succeeded)
+        {
+            downloadSize = downloadSizeHandle.Result;
+            Debug.Log($"[AsyncOperationStatus: Succeeded] donwloadSize: {downloadSize}");
+        }
+        else
+        {
+            Debug.Log($"[AsyncOperationStatus: {downloadSizeHandle.Status.ToString()}]");
+        }
+
+        // ダウンロード
+        var handle = Addressables.DownloadDependenciesAsync(assetsPath);
+        yield return handle;
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            Debug.Log($"[AsyncOperationStatus: Succeeded]");
+            foreach (var resource in handle.Result as System.Collections.Generic.List<UnityEngine.ResourceManagement.ResourceProviders.IAssetBundleResource>)
+            {
+                // AssetBundleファイル
+                AssetBundle ab = resource.GetAssetBundle();
+                Debug.Log($"[load GetAssetBundle name] {resource.GetAssetBundle()}");
+            }
+        }
+        else
+        {
+            Debug.Log($"[AsyncOperationStatus: {handle.Status.ToString()}]");
+        }
+        Addressables.Release(handle);
+
+        // load
+        var obj = Addressables.LoadAssetAsync<GameObject>(assetsPath);
+        yield return obj;
+        // Instantiate
+        Instantiate(obj.Result);
+        isClicked = false;
     }
+
     private IEnumerator LoadTest()
     { 
         var playerSettingsLocation = Addressables.ResolveInternalId(PlayerPrefs.GetString(Addressables.kAddressablesRuntimeDataPath, Addressables.RuntimePath + "/settings.json"));
@@ -211,10 +295,5 @@ public class ResourceSample : MonoBehaviour
         // {
         //     Debug.Log($"provider: {provider.ToString()}");
         // }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }
