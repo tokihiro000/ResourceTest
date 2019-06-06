@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
 
 public class ResourceBuilder
 {
@@ -58,21 +59,26 @@ public class ResourceBuilder
         var path = UnityEditor.AddressableAssets.Build.ContentUpdateScript.GetContentStateDataPath(true);
         if (!string.IsNullOrEmpty(path))
         {
-            var settings = AddressableAssetSettingsDefaultObject.Settings;
             UnityEditor.AddressableAssets.Build.ContentUpdateScript.BuildContentUpdate(AddressableAssetSettingsDefaultObject.Settings, path);
-            foreach (var profileName in settings.profileSettings.GetAllProfileNames())
-            {
-                Debug.Log($"profileName: {profileName}");
-            }
-            Debug.Log($"settings.activeProfileId: {settings.activeProfileId}");
-            //Debug.Log($"settings.activeProfileId: {settings.activeProfileId}");
+
         }
     }
-
 
     [MenuItem("Build/AssetBundles/Addressable_Settings_Test")]
     public static void Addressable_Settings_Test()
     {
-        var settings = AddressableAssetSettingsDefaultObject.Settings;
+        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+        var builtInGroup = settings.groups[0];
+        settings.RemoveGroup(builtInGroup);
+        foreach (var group in settings.groups)
+        {
+            Debug.Log($"group: {group.Name}, {group.name}");
+        }
+
+        foreach (var profileName in settings.profileSettings.GetAllProfileNames())
+        {
+            Debug.Log($"profileName: {profileName}");
+        }
+        Debug.Log($"settings.activeProfileId: {settings.activeProfileId}");
     }
 }
