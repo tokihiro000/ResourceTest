@@ -21,22 +21,22 @@ MonoBehaviour:
     m_Address: 4k_2.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
-    - default
+    - LabelTest
   - m_GUID: 3ab646f134d0e094cb77694878f47011
     m_Address: 4k_4.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
-    - default
+    - LabelTest
   - m_GUID: 9962645db98de0047920fce044fe9d9e
     m_Address: 4k_1.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
-    - default
+    - LabelTest
   - m_GUID: 9cb4d7936d5e2d9429fe02bc055c49ac
     m_Address: 4k_3.jpg
     m_ReadOnly: 0
     m_SerializedLabels:
-    - default
+    - LabelTest
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 62f0b634a9091f3489c29190c2f1052f, type: 2}
   m_SchemaSet:

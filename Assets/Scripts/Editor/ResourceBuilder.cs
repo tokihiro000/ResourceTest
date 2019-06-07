@@ -53,7 +53,7 @@ public class ResourceBuilder
     {
         // 新規ビルド
         // あらたなcontents_catalogが生成される
-        //UnityEditor.AddressableAssets.Settings.AddressableAssetSettings.BuildPlayerContent();
+        //AddressableAssetSettings.BuildPlayerContent();
 
         // 更新ビルド
         var path = UnityEditor.AddressableAssets.Build.ContentUpdateScript.GetContentStateDataPath(true);

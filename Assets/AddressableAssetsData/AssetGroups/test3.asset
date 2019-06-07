@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Address: Assets/AssetBundleResources/Text/test 3
     m_ReadOnly: 0
     m_SerializedLabels:
-    - default
+    - LabelTest
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 62f0b634a9091f3489c29190c2f1052f, type: 2}
   m_SchemaSet:

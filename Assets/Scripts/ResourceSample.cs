@@ -39,7 +39,7 @@ public class ResourceSample : MonoBehaviour
 
         donwload?.OnClickAsObservable().Subscribe(x =>
         {
-            StartCoroutine("DonwloadLoadResource", "default");
+            StartCoroutine("DonwloadLoadResource", "LabelTest");
         });
     }
 
@@ -56,8 +56,8 @@ public class ResourceSample : MonoBehaviour
         yield return Addressables.InitializeAsync();
 
         var handle = Addressables.DownloadDependenciesAsync(assetsPath);
-        var a = handle.PercentComplete;
         yield return handle;
+
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             Debug.Log($"[AsyncOperationStatus: Succeeded]");
@@ -65,19 +65,13 @@ public class ResourceSample : MonoBehaviour
             {
                 // AssetBundleファイル
                 //AssetBundle ab = resource.GetAssetBundle();
-                //hoge1 = ab.LoadAsset("4k_1.jpg");
-                //hoge2 = ab.LoadAsset("4k_2.jpg");
-                //hoge3 = ab.LoadAsset("4k_3.jpg");
-                //hoge4 = ab.LoadAsset("4k_4.jpg");
                 Debug.Log($"[AsyncOperationStatus: Succeeded] {resource.GetAssetBundle()}");
-                //ab.Unload(true);
             }
         }
         else
         {
             Debug.Log($"[AsyncOperationStatus: {handle.Status.ToString()}]");
         }
-        //UnityEngine.Networking.DownloadHandlerFile;
         Addressables.Release(handle);
     }
 
@@ -99,11 +93,11 @@ public class ResourceSample : MonoBehaviour
         // #InitializeAsync
         var initHandle = Addressables.InitializeAsync();
         yield return initHandle;
-        Addressables.Release(initHandle);
-        Addressables.ResourceLocators.Clear();
+        //Addressables.Release(initHandle);
+        //Addressables.ResourceLocators.Clear();
 
-        var initHandle2 = Addressables.InitializeAsync();
-        yield return initHandle2;
+        //var initHandle2 = Addressables.InitializeAsync();
+        //yield return initHandle2;
 
         while (!Caching.ready)
         {
