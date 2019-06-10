@@ -83,7 +83,7 @@ public class ResourceBuilder
         EditorBuildSettings.AddConfigObject(AddressableAssetSettingsDefaultObject.kDefaultConfigObjectName, alterSettings, true);
         AddressableAssetSettingsDefaultObject.Settings = alterSettings;
         AddressableAssetSettingsDefaultObject.Settings.activeProfileId = profileId;
-        //AddressableAssetSettingsDefaultObject.Settings.SetDirty(AddressableAssetSettings.ModificationEvent.ActiveProfileSet, null, true);
+         //AddressableAssetSettingsDefaultObject.Settings.groups
 
         // 新規ビルド
         AddressableAssetSettings.BuildPlayerContent();
