@@ -109,6 +109,9 @@ public class ResourceSample : MonoBehaviour
         // #InitializeAsync
         var initHandle = Addressables.InitializeAsync();
         yield return initHandle;
+        var h = Addressables.LoadContentCatalogAsync($"http://192.168.12.7:51307/StandaloneWindows64/HD/catalog_Default.json");
+        yield return h;
+
         //Addressables.Release(initHandle);
         //Addressables.ResourceLocators.Clear();
 

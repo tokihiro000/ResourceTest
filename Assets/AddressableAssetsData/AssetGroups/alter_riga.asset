@@ -10,16 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: alter_riga
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: alter_riga
   m_Data:
     m_SerializedData: []
-  m_GUID: 3b32d7526da46e24da2c0623931cf84b
-  m_SerializeEntries: []
+  m_GUID: 6f15577f98aa32d4ca2922113fadafda
+  m_SerializeEntries:
+  - m_GUID: 24ff4975e0cf4484186ff0f29b10147b
+    m_Address: Assets/AssetBundleResources/Materials/riga_mat.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 62f0b634a9091f3489c29190c2f1052f, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 8b80b3a0ddcc7f64590bdfa760f994ea, type: 2}
-    - {fileID: 11400000, guid: 2280d408de9eea54b9b1e737e08ae04e, type: 2}
+    - {fileID: 11400000, guid: e316e53d1b50a2946aa2128395d6b24f, type: 2}
+    - {fileID: 11400000, guid: 40e8399049183dc429f9eece26659e1e, type: 2}
