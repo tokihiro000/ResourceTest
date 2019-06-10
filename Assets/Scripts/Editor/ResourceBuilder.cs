@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -67,14 +68,50 @@ public class ResourceBuilder
     [MenuItem("Build/AssetBundles/Addressable_Settings_Test")]
     public static void Addressable_Settings_Test()
     {
-        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-        var builtInGroup = settings.groups[0];
-        settings.RemoveGroup(builtInGroup);
-        foreach (var group in settings.groups)
+        var defaultSettings = AssetDatabase.LoadAssetAtPath<AddressableAssetSettings>("Assets/AddressableAssetsData/AddressableAssetSettings.asset");
+        var alterSettings = AssetDatabase.LoadAssetAtPath<AddressableAssetSettings>("Assets/AddressableAssetsData/AddressableAlterSettings.asset");
+        var profileId = alterSettings.profileSettings.GetProfileId("RemotePackage");
+        if (string.IsNullOrEmpty(profileId))
         {
-            Debug.Log($"group: {group.Name}, {group.name}");
+            Debug.LogError($"profileId is null");
+            return;
         }
+        alterSettings.activeProfileId = profileId;
+        alterSettings.SetDirty(AddressableAssetSettings.ModificationEvent.ActiveProfileSet, alterSettings.activeProfileId, true);
 
+        // 設定切り替え
+        EditorBuildSettings.AddConfigObject(AddressableAssetSettingsDefaultObject.kDefaultConfigObjectName, alterSettings, true);
+        AddressableAssetSettingsDefaultObject.Settings = alterSettings;
+        AddressableAssetSettingsDefaultObject.Settings.activeProfileId = profileId;
+        //AddressableAssetSettingsDefaultObject.Settings.SetDirty(AddressableAssetSettings.ModificationEvent.ActiveProfileSet, null, true);
+
+        // 新規ビルド
+        AddressableAssetSettings.BuildPlayerContent();
+
+        // 設定をデフォルトに戻す
+        EditorBuildSettings.AddConfigObject(AddressableAssetSettingsDefaultObject.kDefaultConfigObjectName, defaultSettings, true);
+        AddressableAssetSettingsDefaultObject.Settings = defaultSettings;
+
+        // 更新
+        //UnityEditor.AddressableAssets.Build.ContentUpdateScript.BuildContentUpdate(alterSettings, "Assets/AddressableAssetsData/Windows/addressables_content_state_alter.bin");
+
+    }
+
+    private void SetDefaultObject()
+    {
+        var alterSettings = ScriptableObject.Instantiate(AssetDatabase.LoadAssetAtPath<AddressableAssetSettings>("Assets/AddressableAssetsData/AddressableAlterSettings.asset")) as AddressableAssetSettings;
+        int i = 0;
+        foreach (var s in alterSettings.groups.ToList())
+        {
+            Debug.Log($"s: {s.name}");
+            AddressableAssetSettingsDefaultObject.Settings.groups[i] = s;
+            i += 1;
+        }
+        AddressableAssetSettingsDefaultObject.Settings.SetDirty(AddressableAssetSettings.ModificationEvent.GroupAdded, null, true);
+    }
+
+    private void PrintProfile(AddressableAssetSettings settings)
+    {
         foreach (var profileName in settings.profileSettings.GetAllProfileNames())
         {
             Debug.Log($"profileName: {profileName}");

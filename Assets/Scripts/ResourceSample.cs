@@ -11,9 +11,21 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine.AddressableAssets.Initialization;
+#if UNITY_EDITOR
+using UnityEditor.AddressableAssets.GUI;
+#endif
 
 public class ResourceSample : MonoBehaviour
 {
+    //#if UNITY_EDITOR
+    //#endif
+    [SerializeField]
+#if UNITY_EDITOR
+    [AssetReferenceUIRestriction]
+    [AssetReferenceUILabelRestriction("default")]
+#endif
+    private AssetReference reference;
+
     public Button cube1, cube2, donwload;
     private Dictionary<string, GameObject> gameObjDict = new Dictionary<string, GameObject>();
     private bool isClicked = false;
@@ -49,6 +61,10 @@ public class ResourceSample : MonoBehaviour
         var handle = Addressables.LoadAssetAsync<GameObject>("Assets/AssetBundleResources/AllInOne/unitychan.prefab");
         yield return handle;
         Instantiate(handle.Result);
+
+        var handle2 = Addressables.LoadAssetAsync<GameObject>(reference);
+        yield return handle2;
+        Instantiate(handle2.Result);
     }
 
     private IEnumerator DonwloadLoadResource(string assetsPath)
